@@ -25,4 +25,15 @@ class GetHeroApi implements AbstractHeroApi {
     final data = response.data;
     return HeroModel.fromJson(data);
   }
+
+  Future<List<HeroModel>> getHeroesByPage(int page) async {
+    final response = await dio.get(
+      'https://rickandmortyapi.com/api/character',
+      queryParameters: {'page': page},
+    );
+
+    final data = response.data;
+    final results = data['results'] as List<dynamic>;
+    return results.map((e) => HeroModel.fromJson(e)).toList();
+  }
 }

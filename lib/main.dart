@@ -11,7 +11,6 @@ import 'package:rickandmorty/features/navigation/widgets/app_router.dart';
 import 'package:rickandmorty/theme/theme.dart';
 
 void main() {
-  // Создаём один раз здесь экземпляры базы и репозитория
   final db = HeroesDatabase();
   final repo = HeroesRepository(dio: Dio(), db: db);
 

@@ -14,10 +14,29 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  late final ScrollController _scrollController;
+
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
+
     context.read<HeroListBloc>().add(LoadHeroList());
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      context.read<HeroListBloc>().add(LoadNextPage());
+    }
   }
 
   @override
@@ -30,7 +49,10 @@ class _MainScreenState extends State<MainScreen> {
       body: BlocBuilder<HeroListBloc, HeroListState>(
         builder: (context, state) {
           if (state is HeroListLoaded) {
-            return HeroesCardsList(data: state.heroes);
+            return HeroesCardsList(
+              data: state.heroes,
+              controller: _scrollController,
+            );
           }
           if (state is HeroListFailure) {
             return LoadError(

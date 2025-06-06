@@ -10,3 +10,5 @@ class LoadHeroDetails extends HeroListEvent {
 
   LoadHeroDetails({required this.id});
 }
+
+class LoadNextPage extends HeroListEvent {}

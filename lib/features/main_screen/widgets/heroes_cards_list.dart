@@ -7,9 +7,10 @@ import 'package:rickandmorty/features/global/widgets/hero_card.dart';
 import 'package:rickandmorty/features/main_screen/bloc/hero_list_bloc.dart';
 
 class HeroesCardsList extends StatelessWidget {
-  const HeroesCardsList({super.key, required this.data});
+  const HeroesCardsList({super.key, required this.data, this.controller});
 
   final List<HeroModel> data;
+  final ScrollController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +22,7 @@ class HeroesCardsList extends StatelessWidget {
         }
         return GridView.builder(
           itemCount: data.length,
+          controller: controller,
           padding: EdgeInsets.all(16),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
