@@ -13,8 +13,17 @@ final class HeroListLoaded extends HeroListState {
   HeroListLoaded({required this.heroes});
 }
 
+final class HeroDetailsLoaded extends HeroListState {
+  final HeroModel hero;
+
+  HeroDetailsLoaded({required this.hero});
+}
+
+
 final class HeroListFailure extends HeroListState {
   final String error;
 
   HeroListFailure({required this.error});
 }
+
+

@@ -4,3 +4,9 @@ part of 'hero_list_bloc.dart';
 sealed class HeroListEvent {}
 
 class LoadHeroList extends HeroListEvent {}
+
+class LoadHeroDetails extends HeroListEvent {
+  final int id;
+
+  LoadHeroDetails({required this.id});
+}

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rickandmorty/features/main_screen/bloc/bloc/hero_list_bloc.dart';
+import 'package:rickandmorty/features/main_screen/bloc/hero_list_bloc.dart';
 import 'package:rickandmorty/features/main_screen/widgets/heroes_cards_list.dart';
 import 'package:rickandmorty/features/main_screen/widgets/load_error.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rickandmorty/theme/app_strings.dart';
 
-class ErrorWidget extends StatelessWidget {
-  const ErrorWidget({super.key, required this.onPressed});
+class LoadError extends StatelessWidget {
+  const LoadError({super.key, required this.onPressed});
 
   final VoidCallback onPressed;
 

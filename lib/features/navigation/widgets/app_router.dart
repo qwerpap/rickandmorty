@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:rickandmorty/features/favorite_screen/view/favorite_screen.dart';
+import 'package:rickandmorty/features/hero_details_screen/view/hero_details_screen.dart';
 import 'package:rickandmorty/features/main_screen/view/main_screen.dart';
 import 'package:rickandmorty/features/navigation/view/scaffold_with_nav_bar.dart';
 import 'package:rickandmorty/features/profile_screen/view/profile_screen.dart';
@@ -7,10 +8,14 @@ import 'package:rickandmorty/features/profile_screen/view/profile_screen.dart';
 class AppRouter {
   static GoRouter router = GoRouter(
     routes: [
-      // GoRoute(
-      //   path: '/',
-      //   builder: (context, state) => const HomeScreen(),
-      // ),
+      GoRoute(
+        path: '/details/:id',
+        name: 'details',
+        builder: (context, state) {
+          final id = int.parse(state.pathParameters['id']!);
+          return HeroDetailsScreen(heroId: id);
+        },
+      ),
       StatefulShellRoute(
         builder: (context, state, navigationShell) {
           return navigationShell;
