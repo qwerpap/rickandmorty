@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:rickandmorty/data/models/hero_model.dart';
 import 'package:rickandmorty/features/main_screen/widgets/favorite_button.dart';
 import 'package:rickandmorty/theme/app_colors.dart';
-import 'package:rickandmorty/theme/app_strings.dart';
 import 'package:rickandmorty/theme/app_styles.dart';
 
 class HeroCard extends StatelessWidget {
   const HeroCard({
     super.key,
-    required this.name,
-    required this.status,
     required this.onTapToFavoriteButton,
     required this.isfavorite,
+    required this.data,
   });
 
-  final String name;
-  final String status;
   final VoidCallback onTapToFavoriteButton;
   final bool isfavorite;
+  final HeroModel data;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +31,7 @@ class HeroCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(13)),
                 child: Image.network(
-                  AppStrings.testImage,
+                  data.image,
                   width: double.infinity,
                   height: 180,
                   fit: BoxFit.cover,
@@ -54,8 +52,13 @@ class HeroCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: AppStyles.title),
-                Text('Status: $status'),
+                Text(
+                  data.name,
+                  style: AppStyles.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text('Status: ${data.status}', style: AppStyles.subtitle),
               ],
             ),
           ),

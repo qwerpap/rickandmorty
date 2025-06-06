@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rickandmorty/data/repositories/get_hero_repository.dart';
-import 'package:rickandmorty/features/main_screen/widgets/hero_card.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rickandmorty/features/main_screen/bloc/bloc/hero_list_bloc.dart';
+import 'package:rickandmorty/features/main_screen/widgets/heroes_cards_list.dart';
+import 'package:rickandmorty/features/main_screen/widgets/load_error.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -10,30 +12,30 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final Set<int> favorites = {};
+  @override
+  void initState() {
+    super.initState();
+    context.read<HeroListBloc>().add(LoadHeroList());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => GetHeroRepository().heroRepository(),
-      ),
       body: SafeArea(
-        child: GridView.builder(
-          itemCount: 10,
-          padding: EdgeInsets.all(16),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 16,
-            childAspectRatio: 0.68,
-          ),
-          itemBuilder:
-              (context, index) => HeroCard(
-                name: 'Hero name',
-                status: 'Dead',
-                onTapToFavoriteButton: () {},
-                isfavorite: false,
-              ),
+        child: BlocBuilder<HeroListBloc, HeroListState>(
+          builder: (context, state) {
+            if (state is HeroListLoaded) {
+              return HeroesCardsList(data: state.heroes);
+            }
+            if (state is HeroListFailure) {
+              return LoadError(
+                onPressed: () {
+                  context.read<HeroListBloc>().add(LoadHeroList());
+                },
+              );
+            }
+            return Center(child: CircularProgressIndicator());
+          },
         ),
       ),
     );
