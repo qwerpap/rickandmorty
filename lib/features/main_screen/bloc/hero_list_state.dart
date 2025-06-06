@@ -19,11 +19,8 @@ final class HeroDetailsLoaded extends HeroListState {
   HeroDetailsLoaded({required this.hero});
 }
 
-
 final class HeroListFailure extends HeroListState {
   final String error;
 
   HeroListFailure({required this.error});
 }
-
-

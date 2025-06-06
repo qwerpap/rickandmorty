@@ -1,3 +1,5 @@
+import 'package:rickandmorty/data/database/hero_database.dart';
+
 class HeroModel {
   final int id;
   final String image;
@@ -39,5 +41,18 @@ class HeroModel {
       'gender': gender,
       'url': url,
     };
+  }
+
+  // Конвертация из HeroItem (Drift)
+  factory HeroModel.fromDb(HeroItem heroItem) {
+    return HeroModel(
+      id: heroItem.id,
+      image: heroItem.image,
+      name: heroItem.name,
+      status: heroItem.status,
+      species: heroItem.species,
+      gender: heroItem.gender,
+      url: heroItem.url,
+    );
   }
 }
