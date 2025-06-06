@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rickandmorty/data/repositories/get_hero_repository.dart';
 import 'package:rickandmorty/features/main_screen/widgets/hero_card.dart';
 
 class MainScreen extends StatefulWidget {
@@ -13,6 +14,9 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => GetHeroRepository().heroRepository(),
+      ),
       body: SafeArea(
         child: GridView.builder(
           itemCount: 10,
