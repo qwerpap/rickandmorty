@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rickandmorty/features/global/widgets/custom_app_bar.dart';
+import 'package:rickandmorty/features/global/widgets/load_error.dart';
 import 'package:rickandmorty/features/main_screen/bloc/hero_list_bloc.dart';
 import 'package:rickandmorty/features/main_screen/widgets/heroes_cards_list.dart';
-import 'package:rickandmorty/features/main_screen/widgets/load_error.dart';
+import 'package:rickandmorty/theme/app_strings.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -21,22 +23,24 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: BlocBuilder<HeroListBloc, HeroListState>(
-          builder: (context, state) {
-            if (state is HeroListLoaded) {
-              return HeroesCardsList(data: state.heroes);
-            }
-            if (state is HeroListFailure) {
-              return LoadError(
-                onPressed: () {
-                  context.read<HeroListBloc>().add(LoadHeroList());
-                },
-              );
-            }
-            return Center(child: CircularProgressIndicator());
-          },
-        ),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: CustomAppBar(title: AppStrings.navHome),
+      ),
+      body: BlocBuilder<HeroListBloc, HeroListState>(
+        builder: (context, state) {
+          if (state is HeroListLoaded) {
+            return HeroesCardsList(data: state.heroes);
+          }
+          if (state is HeroListFailure) {
+            return LoadError(
+              onPressed: () {
+                context.read<HeroListBloc>().add(LoadHeroList());
+              },
+            );
+          }
+          return Center(child: CircularProgressIndicator());
+        },
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:rickandmorty/data/repositories/sources/get_hero_api.dart';
+import 'package:rickandmorty/features/favorite_screen/bloc/favorite_list_bloc.dart';
 import 'package:rickandmorty/features/main_screen/bloc/hero_list_bloc.dart';
 import 'package:rickandmorty/features/navigation/widgets/app_router.dart';
 import 'package:rickandmorty/theme/theme.dart';
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => HeroListBloc(GetHeroApi(dio: Dio()))),
+        BlocProvider(
+          create: (_) => FavoriteListBloc()..add(LoadFavoriteList()),
+        ),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

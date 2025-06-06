@@ -8,4 +8,5 @@ class AppStrings {
   static const detailStatus = 'Status';
   static const detailSpecies = 'Species';
   static const detailGender = 'Gender';
+  static const favListEmpty = 'The favorites list is empty';
 }
