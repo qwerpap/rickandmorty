@@ -8,7 +8,9 @@ import 'package:rickandmorty/data/repositories/sources/heroes_repository.dart';
 import 'package:rickandmorty/features/favorite_screen/bloc/favorite_list_bloc.dart';
 import 'package:rickandmorty/features/main_screen/bloc/hero_list_bloc.dart';
 import 'package:rickandmorty/features/navigation/widgets/app_router.dart';
-import 'package:rickandmorty/theme/theme.dart';
+import 'package:rickandmorty/theme/bloc/theme_bloc.dart';
+import 'package:rickandmorty/theme/dark_theme.dart';
+import 'package:rickandmorty/theme/light_theme.dart';
 
 void main() {
   final db = HeroesDatabase();
@@ -35,11 +37,18 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (_) => FavoriteListBloc(db)..add(LoadFavoriteList()),
         ),
+        BlocProvider(create: (_) => ThemeBloc()),
       ],
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        theme: theme,
-        routerConfig: router,
+      child: BlocBuilder<ThemeBloc, ThemeState>(
+        builder: (context, state) {
+          return MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            theme: lightTheme,
+            darkTheme: darkTheme,
+            themeMode: state.themeMode,
+            routerConfig: router,
+          );
+        },
       ),
     );
   }

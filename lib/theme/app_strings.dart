@@ -9,4 +9,6 @@ class AppStrings {
   static const detailSpecies = 'Species';
   static const detailGender = 'Gender';
   static const favListEmpty = 'The favorites list is empty';
+  static const avatar = 'https://rickandmortyapi.com/api/character/avatar/1.jpeg';
+  static const defaultAvatar = 'https://rickandmortyapi.com/api/character/avatar/1.jpeg';
 }
