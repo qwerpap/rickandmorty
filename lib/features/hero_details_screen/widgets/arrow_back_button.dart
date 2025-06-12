@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class ArrowBackButton extends StatelessWidget {
-  const ArrowBackButton({super.key});
+  const ArrowBackButton({super.key, required this.onPressed});
+
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +14,7 @@ class ArrowBackButton extends StatelessWidget {
         backgroundColor: Colors.white,
         child: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            context.go('/');
-          },
+          onPressed: onPressed,
         ),
       ),
     );

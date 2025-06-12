@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:rickandmorty/data/models/hero_model.dart';
-import 'package:rickandmorty/data/repositories/sources/heroes_repository.dart';
+import 'package:rickandmorty/data/repositories/heroes_repository.dart';
 part 'hero_list_event.dart';
 part 'hero_list_state.dart';
 
@@ -22,6 +22,8 @@ class HeroListBloc extends Bloc<HeroListEvent, HeroListState> {
     try {
       _currentPage = 1;
       final heroes = await heroRepository.getHeroesByPage(_currentPage);
+      // Сохраняем героев в базу
+      await heroRepository.saveHeroesToDatabase(heroes);
       emit(HeroListLoaded(heroes: heroes));
     } catch (e) {
       print(e);
@@ -33,7 +35,7 @@ class HeroListBloc extends Bloc<HeroListEvent, HeroListState> {
     LoadNextPage event,
     Emitter<HeroListState> emit,
   ) async {
-    if (_isFetching) return; // предотвращаем множественные запросы
+    if (_isFetching) return;
     if (state is! HeroListLoaded) return;
 
     _isFetching = true;
@@ -43,10 +45,12 @@ class HeroListBloc extends Bloc<HeroListEvent, HeroListState> {
       _currentPage++;
       final newHeroes = await heroRepository.getHeroesByPage(_currentPage);
       if (newHeroes.isEmpty) {
-        // Можно добавить флаг, что все данные загружены
         _isFetching = false;
         return;
       }
+
+      // Сохраняем героев в базу
+      await heroRepository.saveHeroesToDatabase(newHeroes);
 
       final allHeroes = List<HeroModel>.from(currentState.heroes)
         ..addAll(newHeroes);

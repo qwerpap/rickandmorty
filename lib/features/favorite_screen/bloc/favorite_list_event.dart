@@ -16,3 +16,9 @@ class RemoveFavorite extends FavoriteListEvent {
 
   RemoveFavorite({required this.hero});
 }
+
+class SortFavoriteList extends FavoriteListEvent {
+  final FavoriteSortOption option;
+
+  SortFavoriteList({required this.option});
+}

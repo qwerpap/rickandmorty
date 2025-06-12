@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rickandmorty/data/database/hero_database.dart';
-import 'package:rickandmorty/data/repositories/sources/heroes_repository.dart';
+import 'package:rickandmorty/data/repositories/heroes_repository.dart';
 import 'package:rickandmorty/features/favorite_screen/bloc/favorite_list_bloc.dart';
 import 'package:rickandmorty/features/main_screen/bloc/hero_list_bloc.dart';
 import 'package:rickandmorty/features/navigation/widgets/app_router.dart';

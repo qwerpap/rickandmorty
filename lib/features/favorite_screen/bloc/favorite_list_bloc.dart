@@ -1,8 +1,8 @@
 import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:rickandmorty/data/database/hero_database.dart';
+import 'package:rickandmorty/data/models/favorite_sort_options.dart';
 import 'package:rickandmorty/data/models/hero_model.dart';
 
 part 'favorite_list_event.dart';
@@ -16,6 +16,7 @@ class FavoriteListBloc extends Bloc<FavoriteListEvent, FavoriteListState> {
     on<LoadFavoriteList>(_load);
     on<AddFavorite>(_add);
     on<RemoveFavorite>(_remove);
+    on<SortFavoriteList>(_sort);
   }
 
   Future<void> _load(
@@ -78,5 +79,24 @@ class FavoriteListBloc extends Bloc<FavoriteListEvent, FavoriteListState> {
     _favorites.removeWhere((hero) => hero.id == event.hero.id);
     await database.removeFavorite(event.hero.id);
     emit(FavoriteListLoaded(favorites: List.from(_favorites)));
+  }
+
+  void _sort(SortFavoriteList event, Emitter<FavoriteListState> emit) {
+    if (state is FavoriteListLoaded) {
+      final currentList = List<HeroModel>.from(
+        (state as FavoriteListLoaded).favorites,
+      );
+
+      switch (event.option) {
+        case FavoriteSortOption.nameAsc:
+          currentList.sort((a, b) => a.name.compareTo(b.name));
+          break;
+        case FavoriteSortOption.nameDesc:
+          currentList.sort((a, b) => b.name.compareTo(a.name));
+          break;
+      }
+
+      emit(FavoriteListLoaded(favorites: currentList));
+    }
   }
 }

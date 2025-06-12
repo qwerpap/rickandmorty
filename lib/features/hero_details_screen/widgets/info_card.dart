@@ -36,7 +36,12 @@ class InfoCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(title, style: AppStyles.detatilTitle),
-            Text(detail, style: AppStyles.detatilInfo),
+            Text(
+              detail,
+              style: AppStyles.detatilInfo.copyWith(
+                color: AppColors.primaryColor,
+              ),
+            ),
           ],
         ),
       ],

@@ -9,8 +9,6 @@ class HeroesLocalDataSource {
   HeroesLocalDataSource(this.db);
 
   Future<void> saveHeroesToDb(List<HeroModel> heroes) async {
-    await db.clearHeroes();
-
     final companions =
         heroes
             .map(
@@ -26,6 +24,7 @@ class HeroesLocalDataSource {
             )
             .toList();
 
+    // Вставляем героев с заменой по id, если они уже есть
     await db.insertHeroes(companions);
     developer.log('Сохранено героев: ${heroes.length}', name: 'DB');
   }

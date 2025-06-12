@@ -46,13 +46,16 @@ class HeroesRepository {
 
     try {
       heroes = await remoteApi.getHeroesByPage(page);
-      if (page == 1) {
-        await localDataSource.saveHeroesToDb(heroes);
-      }
+      // сохраняем героев всегда, независимо от страницы
+      await localDataSource.saveHeroesToDb(heroes);
     } catch (e) {
       heroes = await localDataSource.getAllHeroesFromDb();
     }
 
     return heroes;
+  }
+
+  Future<void> saveHeroesToDatabase(List<HeroModel> newHeroes) async {
+    await localDataSource.saveHeroesToDb(newHeroes);
   }
 }
