@@ -1,52 +1,35 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rickandmorty/data/database/hero_database.dart';
-import 'package:rickandmorty/data/repositories/heroes_repository.dart';
-import 'package:rickandmorty/features/favorite_screen/bloc/favorite_list_bloc.dart';
-import 'package:rickandmorty/features/main_screen/bloc/hero_list_bloc.dart';
-import 'package:rickandmorty/features/navigation/widgets/app_router.dart';
-import 'package:rickandmorty/theme/bloc/theme_bloc.dart';
-import 'package:rickandmorty/theme/dark_theme.dart';
-import 'package:rickandmorty/theme/light_theme.dart';
-
+import 'package:rickandmorty/core/bloc/bloc_providers.dart';
+import 'package:rickandmorty/core/di/di.dart';
+import 'package:rickandmorty/core/navigation/presentation/widgets/app_router.dart';
+import 'package:rickandmorty/core/theme/app_theme.dart';
+import 'package:rickandmorty/core/theme/bloc/theme_bloc.dart';
 void main() {
-  final db = HeroesDatabase();
-  final repo = HeroesRepository(dio: Dio(), db: db);
+  BlocProviders.setup();
 
-  runZonedGuarded(() => runApp(MyApp(db: db, repo: repo)), (error, stack) {
+  runZonedGuarded(() => runApp(const MyApp()), (error, stack) {
     log(error.toString(), name: 'App Error', stackTrace: stack);
   });
 }
 
-final router = AppRouter.router;
-
 class MyApp extends StatelessWidget {
-  final HeroesDatabase db;
-  final HeroesRepository repo;
-
-  const MyApp({required this.db, required this.repo, super.key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => HeroListBloc(repo)),
-        BlocProvider(
-          create: (_) => FavoriteListBloc(db)..add(LoadFavoriteList()),
-        ),
-        BlocProvider(create: (_) => ThemeBloc()),
-      ],
+    return BlocProvider<ThemeBloc>(
+      create: (_) => getIt<ThemeBloc>(),
       child: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, state) {
           return MaterialApp.router(
             debugShowCheckedModeBanner: false,
-            theme: lightTheme,
-            darkTheme: darkTheme,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
             themeMode: state.themeMode,
-            routerConfig: router,
+            routerConfig: AppRouter.router,
           );
         },
       ),

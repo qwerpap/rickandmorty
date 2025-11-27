@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rickandmorty/theme/app_colors.dart';
+import '../../../core/theme/app_colors.dart';
 
 class FavoriteButton extends StatelessWidget {
   const FavoriteButton({
@@ -15,16 +15,18 @@ class FavoriteButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(3),
+      child: DecoratedBox(
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
-          borderRadius: BorderRadius.circular(50),
+          shape: BoxShape.circle,
         ),
-        child: Icon(
-          isFavorite ? Icons.star : Icons.star_border,
-          size: 30,
-          color: AppColors.primaryColor,
+        child: Padding(
+          padding: const EdgeInsets.all(3),
+          child: Icon(
+            isFavorite ? Icons.star : Icons.star_border,
+            size: 30,
+            color: AppColors.primaryColor,
+          ),
         ),
       ),
     );

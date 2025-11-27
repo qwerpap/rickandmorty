@@ -1,27 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rickandmorty/features/favorite_screen/bloc/favorite_list_bloc.dart';
-import 'package:rickandmorty/features/favorite_screen/widgets/favorites_cards_list.dart';
-import 'package:rickandmorty/features/favorite_screen/widgets/sort_dropdown.dart';
-import 'package:rickandmorty/features/global/widgets/custom_app_bar.dart';
-import 'package:rickandmorty/features/global/widgets/load_error.dart';
-import 'package:rickandmorty/theme/app_strings.dart';
-import 'package:rickandmorty/theme/app_styles.dart';
+import '../bloc/favorite_list_bloc.dart';
+import '../widgets/favorites_cards_list.dart';
+import '../widgets/sort_dropdown.dart';
+import '../../global/widgets/custom_app_bar.dart';
+import '../../global/widgets/load_error.dart';
+import '../../../core/theme/app_strings.dart';
+import '../../../core/theme/app_styles.dart';
 
-class FavoriteScreen extends StatefulWidget {
+class FavoriteScreen extends StatelessWidget {
   const FavoriteScreen({super.key});
-
-  @override
-  State<FavoriteScreen> createState() => _FavoriteScreenState();
-}
-
-class _FavoriteScreenState extends State<FavoriteScreen> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50),
+        preferredSize: const Size.fromHeight(50),
         child: CustomAppBar(title: AppStrings.navFavorite),
       ),
       body: Column(

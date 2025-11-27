@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rickandmorty/theme/app_colors.dart';
+import '../../../core/theme/app_colors.dart';
 
 class UserAvatar extends StatelessWidget {
   const UserAvatar({super.key, required this.avatarUrl});

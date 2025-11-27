@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:rickandmorty/data/models/hero_model.dart';
-import 'package:rickandmorty/features/main_screen/widgets/favorite_button.dart';
-import 'package:rickandmorty/theme/app_colors.dart';
-import 'package:rickandmorty/theme/app_styles.dart';
+import '../../main_screen/domain/models/hero_model.dart';
+import '../../main_screen/widgets/favorite_button.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_styles.dart';
+import '../../../core/theme/app_strings.dart';
 
 class HeroCard extends StatelessWidget {
   const HeroCard({
@@ -18,9 +19,9 @@ class HeroCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(13),
+        borderRadius: const BorderRadius.all(Radius.circular(13)),
         border: Border.all(color: AppColors.primaryColor),
       ),
       child: Column(
@@ -29,7 +30,7 @@ class HeroCard extends StatelessWidget {
           Stack(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(13)),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(13)),
                 child: Image.network(
                   data.image,
                   width: double.infinity,
@@ -58,7 +59,7 @@ class HeroCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                Text('Status: ${data.status}', style: AppStyles.subtitle),
+                Text('${AppStrings.statusLabel} ${data.status}', style: AppStyles.subtitle),
               ],
             ),
           ),

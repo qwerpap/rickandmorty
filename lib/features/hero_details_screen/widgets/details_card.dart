@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rickandmorty/data/models/hero_model.dart';
-import 'package:rickandmorty/features/hero_details_screen/widgets/arrow_back_button.dart';
-import 'package:rickandmorty/features/hero_details_screen/widgets/details_cards_list.dart';
+import '../../main_screen/domain/models/hero_model.dart';
+import 'arrow_back_button.dart';
+import 'details_cards_list.dart';
 
 class DetailsCard extends StatelessWidget {
   const DetailsCard({super.key, required this.hero});
@@ -29,7 +29,7 @@ class DetailsCard extends StatelessWidget {
         ),
         ArrowBackButton(
           onPressed: () {
-            context.go('/');
+            context.pop();
           },
         ),
       ],

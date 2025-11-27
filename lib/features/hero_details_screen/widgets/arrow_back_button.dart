@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/app_colors.dart';
 
 class ArrowBackButton extends StatelessWidget {
   const ArrowBackButton({super.key, required this.onPressed});
@@ -11,9 +12,9 @@ class ArrowBackButton extends StatelessWidget {
       top: MediaQuery.of(context).padding.top + 8,
       left: 10,
       child: CircleAvatar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.whiteColor,
         child: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: AppColors.blackColor),
           onPressed: onPressed,
         ),
       ),

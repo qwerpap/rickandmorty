@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:rickandmorty/theme/app_colors.dart';
-import 'package:rickandmorty/theme/app_styles.dart';
-import 'package:rickandmorty/theme/image_source.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_styles.dart';
+import '../../../../core/theme/image_source.dart';
 
 class InfoCard extends StatelessWidget {
   const InfoCard({
@@ -20,18 +20,20 @@ class InfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
-          padding: EdgeInsets.all(5),
-          decoration: BoxDecoration(
+        DecoratedBox(
+          decoration: const BoxDecoration(
             color: AppColors.primaryColor,
-            borderRadius: BorderRadius.circular(50),
+            shape: BoxShape.circle,
           ),
-          child: SvgPicture.asset(
-            ImageSource.navProfile,
-            color: AppColors.whiteColor,
+          child: Padding(
+            padding: const EdgeInsets.all(5),
+            child: SvgPicture.asset(
+              ImageSource.navProfile,
+              color: AppColors.whiteColor,
+            ),
           ),
         ),
-        SizedBox(width: 16),
+        const SizedBox(width: 16),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

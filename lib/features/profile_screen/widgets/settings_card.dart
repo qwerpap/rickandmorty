@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:rickandmorty/theme/app_styles.dart';
-import 'package:rickandmorty/theme/bloc/theme_bloc.dart';
+import '../../../core/theme/app_styles.dart';
+import '../../../core/theme/bloc/theme_bloc.dart';
 
 class SettingsCard extends StatelessWidget {
   const SettingsCard({super.key, required this.text, required this.svg});
@@ -22,7 +22,7 @@ class SettingsCard extends StatelessWidget {
       child: Row(
         children: [
           SvgPicture.asset(svg, height: 25),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           Text(text, style: AppStyles.subtitle),
         ],
       ),
