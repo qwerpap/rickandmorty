@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rickandmorty/data/models/hero_model.dart';
-import 'package:rickandmorty/features/favorite_screen/bloc/favorite_list_bloc.dart';
-import 'package:rickandmorty/features/global/widgets/hero_card.dart';
-import 'package:rickandmorty/features/main_screen/bloc/hero_list_bloc.dart';
+import '../domain/models/hero_model.dart';
+import '../../favorite_screen/bloc/favorite_list_bloc.dart';
+import '../../global/widgets/hero_card.dart';
+import '../bloc/hero_list_bloc.dart';
 
 class HeroesCardsList extends StatelessWidget {
   const HeroesCardsList({super.key, required this.data, this.controller});
@@ -15,16 +15,16 @@ class HeroesCardsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FavoriteListBloc, FavoriteListState>(
+      buildWhen: (previous, current) => current is FavoriteListLoaded,
       builder: (context, favoriteState) {
-        List<HeroModel> favorites = [];
-        if (favoriteState is FavoriteListLoaded) {
-          favorites = favoriteState.favorites;
-        }
+        final favorites = favoriteState is FavoriteListLoaded
+            ? favoriteState.favorites
+            : <HeroModel>[];
         return GridView.builder(
           itemCount: data.length,
           controller: controller,
-          padding: EdgeInsets.all(16),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          padding: const EdgeInsets.all(16),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 10,
             mainAxisSpacing: 16,
@@ -36,7 +36,7 @@ class HeroesCardsList extends StatelessWidget {
             return InkWell(
               onTap: () {
                 context.read<HeroListBloc>().add(LoadHeroDetails(id: hero.id));
-                context.go('/details/${hero.id}');
+                context.push('/details/${hero.id}');
               },
               child: HeroCard(
                 data: hero,

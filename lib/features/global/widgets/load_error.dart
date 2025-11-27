@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rickandmorty/theme/app_strings.dart';
+import '../../../core/theme/app_strings.dart';
 
 class LoadError extends StatelessWidget {
   const LoadError({super.key, required this.onPressed});

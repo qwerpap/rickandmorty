@@ -1,18 +1,22 @@
 import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:rickandmorty/data/database/hero_database.dart';
-import 'package:rickandmorty/data/models/favorite_sort_options.dart';
-import 'package:rickandmorty/data/models/hero_model.dart';
-
+import '../../main_screen/domain/models/hero_model.dart';
+import '../../main_screen/domain/repositories/hero_repository.dart';
+import '../domain/models/favorite_sort_option.dart';
+import '../domain/repositories/favorite_repository.dart';
 part 'favorite_list_event.dart';
 part 'favorite_list_state.dart';
 
 class FavoriteListBloc extends Bloc<FavoriteListEvent, FavoriteListState> {
-  final HeroesDatabase database;
+  final FavoriteRepository favoriteRepository;
+  final HeroRepository heroRepository;
   final List<HeroModel> _favorites = [];
 
-  FavoriteListBloc(this.database) : super(FavoriteListInitial()) {
+  FavoriteListBloc(
+    this.favoriteRepository,
+    this.heroRepository,
+  ) : super(FavoriteListInitial()) {
     on<LoadFavoriteList>(_load);
     on<AddFavorite>(_add);
     on<RemoveFavorite>(_remove);
@@ -25,16 +29,16 @@ class FavoriteListBloc extends Bloc<FavoriteListEvent, FavoriteListState> {
   ) async {
     emit(FavoriteListLoading());
     try {
-      final favoriteIds = await database.getAllFavoriteIds();
-      log('Favorite ids: $favoriteIds');
+      final favoriteIds = await favoriteRepository.getAllFavoriteIds();
+      log('Favorite ids: $favoriteIds', name: 'FavoriteBloc');
 
       final favorites = <HeroModel>[];
       for (final id in favoriteIds) {
-        final hero = await database.getHeroById(id);
+        final hero = await heroRepository.getHeroById(id);
         if (hero != null) {
-          favorites.add(HeroModel.fromDb(hero));
+          favorites.add(hero);
         } else {
-          log('Hero with id $id not found in database');
+          log('Hero with id $id not found in database', name: 'FavoriteBloc');
         }
       }
       _favorites.clear();
@@ -42,24 +46,26 @@ class FavoriteListBloc extends Bloc<FavoriteListEvent, FavoriteListState> {
 
       emit(FavoriteListLoaded(favorites: List.from(_favorites)));
     } catch (e, st) {
-      log('Error loading favorites: $e\n$st');
+      log('Error loading favorites: $e\n$st', name: 'FavoriteBloc');
       emit(FavoriteListFailure());
     }
   }
 
-  Future<void> _add(AddFavorite event, Emitter<FavoriteListState> emit) async {
+  Future<void> _add(
+    AddFavorite event,
+    Emitter<FavoriteListState> emit,
+  ) async {
     try {
       final isAlreadyFavorite = _favorites.any(
         (hero) => hero.id == event.hero.id,
       );
       if (!isAlreadyFavorite) {
-        await database.addFavorite(event.hero.id);
-        // После добавления в базу загрузим заново список избранных
-        final favoriteIds = await database.getAllFavoriteIds();
+        await favoriteRepository.addFavorite(event.hero.id);
+        final favoriteIds = await favoriteRepository.getAllFavoriteIds();
         final favorites = <HeroModel>[];
         for (final id in favoriteIds) {
-          final hero = await database.getHeroById(id);
-          if (hero != null) favorites.add(HeroModel.fromDb(hero));
+          final hero = await heroRepository.getHeroById(id);
+          if (hero != null) favorites.add(hero);
         }
         _favorites
           ..clear()
@@ -67,7 +73,7 @@ class FavoriteListBloc extends Bloc<FavoriteListEvent, FavoriteListState> {
         emit(FavoriteListLoaded(favorites: List.from(_favorites)));
       }
     } catch (e, st) {
-      log('Error adding favorite: $e\n$st');
+      log('Error adding favorite: $e\n$st', name: 'FavoriteBloc');
       emit(FavoriteListFailure());
     }
   }
@@ -77,11 +83,14 @@ class FavoriteListBloc extends Bloc<FavoriteListEvent, FavoriteListState> {
     Emitter<FavoriteListState> emit,
   ) async {
     _favorites.removeWhere((hero) => hero.id == event.hero.id);
-    await database.removeFavorite(event.hero.id);
+    await favoriteRepository.removeFavorite(event.hero.id);
     emit(FavoriteListLoaded(favorites: List.from(_favorites)));
   }
 
-  void _sort(SortFavoriteList event, Emitter<FavoriteListState> emit) {
+  void _sort(
+    SortFavoriteList event,
+    Emitter<FavoriteListState> emit,
+  ) {
     if (state is FavoriteListLoaded) {
       final currentList = List<HeroModel>.from(
         (state as FavoriteListLoaded).favorites,

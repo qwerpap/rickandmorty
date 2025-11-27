@@ -12,3 +12,5 @@ class LoadHeroDetails extends HeroListEvent {
 }
 
 class LoadNextPage extends HeroListEvent {}
+
+class RestoreListState extends HeroListEvent {}

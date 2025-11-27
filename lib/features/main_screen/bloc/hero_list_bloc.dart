@@ -1,32 +1,37 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:rickandmorty/data/models/hero_model.dart';
-import 'package:rickandmorty/data/repositories/heroes_repository.dart';
+import '../domain/models/hero_model.dart';
+import '../domain/repositories/hero_repository.dart';
 part 'hero_list_event.dart';
 part 'hero_list_state.dart';
 
 class HeroListBloc extends Bloc<HeroListEvent, HeroListState> {
-  final HeroesRepository heroRepository;
+  final HeroRepository heroRepository;
 
   int _currentPage = 1;
   bool _isFetching = false;
+  HeroListLoaded? _lastListState;
 
   HeroListBloc(this.heroRepository) : super(HeroListInitial()) {
     on<LoadHeroList>(_load);
     on<LoadHeroDetails>(_details);
     on<LoadNextPage>(_loadNextPage);
+    on<RestoreListState>(_restoreListState);
   }
 
-  Future<void> _load(LoadHeroList event, Emitter<HeroListState> emit) async {
+  Future<void> _load(
+    LoadHeroList event,
+    Emitter<HeroListState> emit,
+  ) async {
     emit(HeroListLoading());
     try {
       _currentPage = 1;
       final heroes = await heroRepository.getHeroesByPage(_currentPage);
-      // Сохраняем героев в базу
-      await heroRepository.saveHeroesToDatabase(heroes);
-      emit(HeroListLoaded(heroes: heroes));
+      await heroRepository.saveHeroes(heroes);
+      final loadedState = HeroListLoaded(heroes: heroes);
+      _lastListState = loadedState;
+      emit(loadedState);
     } catch (e) {
-      print(e);
       emit(HeroListFailure(error: 'error'));
     }
   }
@@ -49,14 +54,14 @@ class HeroListBloc extends Bloc<HeroListEvent, HeroListState> {
         return;
       }
 
-      // Сохраняем героев в базу
-      await heroRepository.saveHeroesToDatabase(newHeroes);
+      await heroRepository.saveHeroes(newHeroes);
 
       final allHeroes = List<HeroModel>.from(currentState.heroes)
         ..addAll(newHeroes);
-      emit(HeroListLoaded(heroes: allHeroes));
+      final loadedState = HeroListLoaded(heroes: allHeroes);
+      _lastListState = loadedState;
+      emit(loadedState);
     } catch (e) {
-      print(e);
       emit(HeroListFailure(error: 'error'));
     } finally {
       _isFetching = false;
@@ -67,6 +72,26 @@ class HeroListBloc extends Bloc<HeroListEvent, HeroListState> {
     LoadHeroDetails event,
     Emitter<HeroListState> emit,
   ) async {
+    if (state is HeroListLoaded) {
+      _lastListState = state as HeroListLoaded;
+    }
+    
+    if (state is HeroDetailsLoaded) {
+      final currentHero = (state as HeroDetailsLoaded).hero;
+      if (currentHero.id == event.id) {
+        return;
+      }
+    }
+    
+    try {
+      final hero = await heroRepository.getHeroById(event.id);
+      if (hero != null) {
+        emit(HeroDetailsLoaded(hero: hero));
+        return;
+      }
+    } catch (e) {
+    }
+    
     emit(HeroListLoading());
     try {
       final hero = await heroRepository.getHeroById(event.id);
@@ -76,8 +101,18 @@ class HeroListBloc extends Bloc<HeroListEvent, HeroListState> {
       }
       emit(HeroDetailsLoaded(hero: hero));
     } catch (e) {
-      print(e);
       emit(HeroListFailure(error: 'error'));
+    }
+  }
+  
+  Future<void> _restoreListState(
+    RestoreListState event,
+    Emitter<HeroListState> emit,
+  ) async {
+    if (_lastListState != null) {
+      emit(_lastListState!);
+    } else {
+      add(LoadHeroList());
     }
   }
 }
